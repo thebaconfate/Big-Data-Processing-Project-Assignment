@@ -1,0 +1,28 @@
+Bloop server PID: 18912
+Ignoring SIGINT
+Will truncate output file C:\Users\gerar\Documents\VUB\Mastervakken\Cloud-Computing-and-Big-Data-Processing\Big-Data-Processing\project\null\ScalaCli\data\bloop\daemon\output every 5 minutes
+Exception in thread "main" java.net.SocketException: Unix domain path too long
+	at java.base/sun.nio.ch.UnixDomainSockets.bind0(Native Method)
+	at java.base/sun.nio.ch.UnixDomainSockets.bind(UnixDomainSockets.java:115)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.unixBind(ServerSocketChannelImpl.java:326)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:299)
+	at java.base/java.nio.channels.ServerSocketChannel.bind(ServerSocketChannel.java:224)
+	at libdaemonjvm.internal.Java16SocketHandler$.server(Java16SocketHandler.scala:41)
+	at libdaemonjvm.internal.SocketHandler$.server(SocketHandler.scala:20)
+	at bloop.BloopServer$.$anonfun$startServer$1(BloopServer.scala:191)
+	at scala.util.Either.map(Either.scala:353)
+	at bloop.BloopServer$.startServer(BloopServer.scala:189)
+	at bloop.BloopServer$.$anonfun$main$4(BloopServer.scala:93)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at libdaemonjvm.server.Lock$.unsafeWritePidAndSetup$1(Lock.scala:32)
+	at libdaemonjvm.server.Lock$.$anonfun$tryAcquire$3(Lock.scala:52)
+	at scala.util.Either.flatMap(Either.scala:341)
+	at libdaemonjvm.server.Lock$.$anonfun$tryAcquire$2(Lock.scala:51)
+	at scala.util.Either.flatMap(Either.scala:341)
+	at libdaemonjvm.server.Lock$.unsafeCleanUpAndSetup$1(Lock.scala:50)
+	at libdaemonjvm.server.Lock$.$anonfun$tryAcquire$9(Lock.scala:100)
+	at libdaemonjvm.LockFiles.withLock(LockFiles.scala:37)
+	at libdaemonjvm.server.Lock$.tryAcquire(Lock.scala:97)
+	at bloop.BloopServer$.loop$1(BloopServer.scala:93)
+	at bloop.BloopServer$.main(BloopServer.scala:117)
+	at bloop.BloopServer.main(BloopServer.scala)
