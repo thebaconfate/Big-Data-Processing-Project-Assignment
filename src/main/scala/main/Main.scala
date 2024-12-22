@@ -33,7 +33,10 @@ object Main {
     val filename = "dataset.txt"
     val sc = new SparkContext(conf)
     val epsilon = 0.001
-    val initRdd = sc.textFile(filename).map(_.toDouble).persist() // TODO: (Un)Comment this persist to test performance
+    val initRdd =
+      sc.textFile(filename)
+        .map(_.toDouble)
+        .persist() // TODO: (Un)Comment this persist to test performance
     val startTime = System.nanoTime()
     printResults(EM(initRdd, 3, epsilon))
     val endTime = System.nanoTime()
@@ -66,15 +69,15 @@ object Main {
       means: Array[Double],
       variances: Array[Double]
   ): RDD[Array[Double]] = X.map(x => {
-      val K = weights.length
-      val nominators = (0 until K).map(k =>
-        weights(k) * Math.exp(
-          -0.5 * Math.pow(x - means(k), 2) / variances(k)
-        ) / Math.sqrt(2 * Math.PI * variances(k))
-      )
-      val denominator = nominators.sum
-      nominators.map(n => n / denominator).toArray
-    })
+    val K = weights.length
+    val nominators = (0 until K).map(k =>
+      weights(k) * Math.exp(
+        -0.5 * Math.pow(x - means(k), 2) / variances(k)
+      ) / Math.sqrt(2 * Math.PI * variances(k))
+    )
+    val denominator = nominators.sum
+    nominators.map(n => n / denominator).toArray
+  })
 
   private def EM(X: RDD[Double], K: Int, epsilon: Double): GMM = {
     var meansVector = X.takeSample(withReplacement = false, num = K)
@@ -92,7 +95,7 @@ object Main {
         weights = weightsVector,
         means = meansVector,
         variances = varianceVector
-      ).persist() //TODO: (Un)Comment this persist to test performance
+      ).persist() // TODO: (Un)Comment this persist to test performance
       val sumGammas: Array[Double] = gammaRDD.reduce((prev, current) =>
         prev
           .zip(current)
@@ -122,7 +125,13 @@ object Main {
               gammaZippedXMinusMeansSquaredVectors._1 * gammaZippedXMinusMeansSquaredVectors._2
             )
         )
-        .reduce((a, b) => a.zip(b).map(t => t._1 + t._2))
+        .reduce((prev, current) =>
+          prev
+            .zip(current)
+            .map(prevZippedCurrent =>
+              prevZippedCurrent._1 + prevZippedCurrent._2
+            )
+        )
         .zip(sumGammas)
         .map(t => t._1 / t._2)
 
