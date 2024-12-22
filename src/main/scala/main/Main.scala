@@ -58,7 +58,7 @@ object Main {
     var meansVector = X.takeSample(withReplacement = false, num = K)
     val count = X.count()
     val variance = X.variance()
-    val varianceVector = Array.fill(K)(variance)
+    var varianceVector = Array.fill(K)(variance)
     var weightsVector: Array[Double] = Array.fill(K)(1 / K)
     val currentLogLikelihood =
       logLikelihood(X, weightsVector, meansVector, varianceVector)
@@ -71,15 +71,34 @@ object Main {
         means = meansVector,
         variances = varianceVector
       ).persist()
-      val sumXs = gammaRDD.reduce((a, b) => a.zip(b).map((t) => t._1 + t._2))
-      weightsVector = sumXs.map(_ / count)
+      val sumGammas = gammaRDD.reduce((prev, current) =>
+        prev
+          .zip(current)
+          .map((prevZippedCurrent) =>
+            prevZippedCurrent._1 + prevZippedCurrent._2
+          )
+      )
+      weightsVector = sumGammas.map(_ / count)
       meansVector = gammaRDD
         .zip(X)
-        .map((t) => t._1.map(_ * t._2))
-        .reduce((a, b) => a.zip(b).map((t) => t._1 + t._2))
-        .zip(sumXs)
-        .map((t) => t._1 / t._2)
-
+        .map(gammaZippedX => gammaZippedX._1.map(_ * gammaZippedX._2))
+        .reduce((prev, current) =>
+          prev
+            .zip(current)
+            .map(prevZippedCurrent =>
+              prevZippedCurrent._1 + prevZippedCurrent._2
+            )
+        )
+        .zip(sumGammas)
+        .map(sumGammaTimesMeanZippedSumGammas =>
+          sumGammaTimesMeanZippedSumGammas._1 / sumGammaTimesMeanZippedSumGammas._2
+        )
+      varianceVector = gammaRDD
+        .zip(X.map(x => varianceVector.map(v => Math.pow(x - v, 2))))
+        .map(zipped => zipped._1.zip(zipped._2).map(t => t._1 * t._2))
+        .reduce((a, b) => a.zip(b).map(t => t._1 + t._2))
+        .zip(sumGammas)
+        .map(t => t._1 / t._2)
 
     } while (false)
     // println(s"Means: " + meansVector.toString())
