@@ -6,12 +6,24 @@ import org.apache.spark.{SparkConf, SparkContext}
 object Main {
   private type GMM = (Array[Double], Array[Double], Array[Double]);
 
-  def printResults(
+  private def printResults(
       arrays: (Array[Double], Array[Double], Array[Double])
   ): Unit = {
     println("Weights: " + arrays._1.mkString(", "))
     println("Means: " + arrays._2.mkString(", "))
     println("Variances " + arrays._3.mkString(", "))
+  }
+
+  private def formatNanos(nanos: Long): String = {
+    var ms = nanos / 1_000_000
+    val ns = nanos % 1_000_000
+    var seconds = ms / 1_000
+    ms = ms % 1_000
+    var minutes = seconds / 60
+    seconds = seconds % 60
+    val hours = minutes / 60
+    minutes = minutes % 60
+    f"$hours%02dh $minutes%02dm $seconds%02ds $ms%03dms $ns%09dns"
   }
 
   def main(args: Array[String]): Unit = {
@@ -21,10 +33,11 @@ object Main {
     val filename = "dataset.txt"
     val sc = new SparkContext(conf)
     val epsilon = 0.001
-    val initRdd = sc.textFile(filename).map(_.toDouble).persist()
+    val initRdd = sc.textFile(filename).map(_.toDouble).persist() // TODO: (Un)Comment this persist to test performance
+    val startTime = System.nanoTime()
     printResults(EM(initRdd, 3, epsilon))
-    //printResults(EM(initRdd, 10, epsilon))
-
+    val endTime = System.nanoTime()
+    println("Elapsed time: " + formatNanos(endTime - startTime))
   }
 
   private def logLikelihood(
@@ -37,7 +50,7 @@ object Main {
     X.map(x => {
       Math.log(
         (0 until K)
-          .map((k) =>
+          .map(k =>
             weights(k) * Math.exp(
               -0.5 * Math.pow(x - means(k), 2) / variance(k)
             ) / Math.sqrt(2 * Math.PI * variance(k))
@@ -52,8 +65,7 @@ object Main {
       weights: Array[Double],
       means: Array[Double],
       variances: Array[Double]
-  ): RDD[Array[Double]] = {
-    X.map(x => {
+  ): RDD[Array[Double]] = X.map(x => {
       val K = weights.length
       val nominators = (0 until K).map(k =>
         weights(k) * Math.exp(
@@ -63,7 +75,6 @@ object Main {
       val denominator = nominators.sum
       nominators.map(n => n / denominator).toArray
     })
-  }
 
   private def EM(X: RDD[Double], K: Int, epsilon: Double): GMM = {
     var meansVector = X.takeSample(withReplacement = false, num = K)
@@ -81,7 +92,7 @@ object Main {
         weights = weightsVector,
         means = meansVector,
         variances = varianceVector
-      ).persist()
+      ).persist() //TODO: (Un)Comment this persist to test performance
       val sumGammas: Array[Double] = gammaRDD.reduce((prev, current) =>
         prev
           .zip(current)
