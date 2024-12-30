@@ -1,17 +1,20 @@
 package main
 
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkConf, SparkContext}
+
+import java.io.{File, PrintWriter}
 
 object Main {
   private type GMM = (Array[Double], Array[Double], Array[Double]);
 
   private def printResults(
       arrays: (Array[Double], Array[Double], Array[Double])
-  ): Unit = {
-    println("Weights: " + arrays._1.mkString(", "))
-    println("Means: " + arrays._2.mkString(", "))
-    println("Variances " + arrays._3.mkString(", "))
+  ): String = {
+    s"Weights: ${arrays._1.mkString(", ")}\n" +
+      s"Means:  ${arrays._2.mkString(", ")}\n" +
+      s"Variances ${arrays._3.mkString(", ")}"
   }
 
   private def formatNanos(nanos: Long): String = {
@@ -31,6 +34,7 @@ object Main {
     conf.setAppName("Datasets Test")
     conf.setMaster("local[*]")
     val filename = "dataset.txt"
+    //val filename = "/data/bigDataSecret/dataset-small.txt"
     val sc = new SparkContext(conf)
     val epsilon = 0.001
     val initRdd =
@@ -38,9 +42,17 @@ object Main {
         .map(_.toDouble)
         .persist() // TODO: (Un)Comment this persist to test performance
     val startTime = System.nanoTime()
-    printResults(EM(initRdd, 3, epsilon))
+    val results = EM(initRdd, 5, epsilon)
     val endTime = System.nanoTime()
     println("Elapsed time: " + formatNanos(endTime - startTime))
+    println(printResults(results))
+    val writer = new PrintWriter(new File("logs.txt"))
+    try {
+      writer.println("Elapsed time: " + formatNanos(endTime - startTime))
+      writer.println(printResults(results))
+    } finally {
+      writer.close()
+    }
   }
 
   private def logLikelihood(
@@ -136,8 +148,6 @@ object Main {
         .map(t => t._1 / t._2)
 
       prevLogLikelihood = currentLogLikelihood
-      println("Intermediate results: ")
-      printResults((weightsVector, meansVector, varianceVector))
       currentLogLikelihood = logLikelihood(
         X,
         weights = weightsVector,

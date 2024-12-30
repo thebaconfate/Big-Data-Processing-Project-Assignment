@@ -1,0 +1,9 @@
+\babel@toc {dutch}{}\relax 
+\contentsline {section}{\numberline {1}Design decisions}{2}{section.1}%
+\contentsline {section}{\numberline {2}GMM}{2}{section.2}%
+\contentsline {section}{\numberline {3}Benchmarking}{2}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Local machine}{2}{subsection.3.1}%
+\contentsline {section}{\numberline {4}Questions}{2}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Have you persisted some of your intermediate results? Can you think of why persisting your data in memory may be helpful for this algorithm?}{2}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2} In which parts of your implementation have you used partitioning? Did it help for performance? If so, why? }{3}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3} Did you use RDDs, DataFrames or Datasets for your implementation? Why? }{3}{subsection.4.3}%
