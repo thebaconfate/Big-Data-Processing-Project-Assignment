@@ -50,33 +50,75 @@ Lastly I also decided to pre-compute the sum of the gamma RDD so there's no need
 When setting up the experiment, I had to choose a K for the amount of gaussians and an Epsilon, which denoted the precision of the results.
 When doing the experiments, I repeated the experiments a hundred times and took the average elapsed time as well as the average of the results.
 Switching these values up yielded the following:
-
-Initial setup: $K = 3$, $\epsilon = 0,01$\\
+\par
+Setup: $K = 3$, $\epsilon = 0,01$\\
 Elapsed time: 00h 00m 34s 958ms 000849800ns\\
 \begin{table}[H]
-	\begin{tabularx}{\textwidth}{|l|l|l|l|}
+	\begin{tabularx}{\textwidth}{
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X|
+		}
 		\hline
-		Weights:   & 0.30135819500681843 & 0.3190340426348462 & 0.37960776235833354 \\
+		Weights:   & 0.30   & 0.31   & 0.37   \\
 		\hline
-		Means:     & 168.5851121666961   & 163.85208936111448 & 179.82230525830337  \\
+		Means:     & 168.58 & 163.85 & 179.82 \\
 		\hline
-		Variances: & 54.039394803851245  & 32.951466889706    & 52.863466362238     \\
+		Variances: & 54.03  & 32.95  & 52.86  \\
 		\hline
 	\end{tabularx}
-
 \end{table}
-
-Setup: K = 5, Epsilon = 0,01
+Setup: $K = 5$, $\epsilon = 0,01$\\
 Elapsed time: 00h 01m 09s 774ms 000631000ns
-Weights: 0.1589171892439168, 0.24175949298891342, 0.364581200817622, 0.08930261876976954, 0.14543949817978694
-Means:  164.74029436057168, 170.48954064721514, 179.6908146382836, 162.65908846246577, 164.36757418803285
-Variances 33.4559895779154, 61.8866268633007, 54.48191424245265, 33.963078614790966, 33.395280960298955
-
+\begin{table}[H]
+	\begin{tabularx}{\textwidth}{
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X|
+		}
+		\hline[H]
+		Weights:  & 0.15   & 0.24   & 0.36   & 0.08   & 0.14   \\
+		\hline
+		Means:    & 164.74 & 170.48 & 179.69 & 162.65 & 164.36 \\
+		\hline
+		Variances & 33.45  & 61.88  & 54.48  & 33.96  & 33.39  \\
+		\hline
+	\end{tabularx}
+\end{table}
+Setup: $K = 3$, $\epsilon = 0,001$
+%placeholder
+\begin{table}
+	\begin{tabularx}{\textwidth}{|X|X|X|X|}
+		\hline
+		\hline
+	\end{tabularx}
+\end{table}
+Setup: $K = 5$, $\epsilon = 0,01$
+%placeholder
+\begin{table}
+	\begin{tabularx}{\textwidth}{
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X|
+		}
+		\hline
+		\hline
+	\end{tabularx}
+\end{table}
 In all cases, it meant that when the Epsilon is smaller, more iterations are required to find results.
 When the chosen K is higher, this also means that the array of results is higher, which means more computations must be done to update the weights, variances and means. Both of which increase the elapsed time.
-
+\par
 After testing different starting values, I also tested my implementation by removing or adding persists on RDD's. I found that removing persists on the intermediate results described in \ref{sec:design-decisions} leads to a lot longer execution times, especially when having a smaller Epsilon or higher K.
+\par
 I must admit, I tried this experiment only a few times because it just took too long and it was already mentioned in class that not persisting intermediate results was very inefficient.
+\par
 \section{Questions}
 \subsection{Have you persisted some of your intermediate results? Can you think of why persisting
 	your data in memory may be helpful for this algorithm?}
@@ -91,7 +133,7 @@ Consequently if its latest state is far away, it has to recompute a lot. This me
 	In which parts of your implementation have you used partitioning? Did it help for
 	performance? If so, why?
 }
-None, I did not make use of partitioning.
+None, I did not make use of partitioning outside the default partitioning.
 I figured since the dataset is not categorised or requires 'grouping' partitioning is not needed.
 However, afterwards I thought perhaps I could have partitioned the dataset to group identical values together in the same partition to help with computing the GMM.
 Perhaps instead of summing the results of the algorithm I could have applied the algorithm once to a value in the partition and then multiplied it by the amount of occurences of the value in the partition and then sum the results. Regardless, I did not trust my math skills enough to try this.

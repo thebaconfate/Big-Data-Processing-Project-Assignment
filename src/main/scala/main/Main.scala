@@ -1,7 +1,6 @@
 package main
 
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkConf, SparkContext}
 
 import java.io.{File, PrintWriter}
@@ -10,8 +9,8 @@ object Main {
   private type GMM = (Array[Double], Array[Double], Array[Double]);
 
   private def printResults(
-      arrays: (Array[Double], Array[Double], Array[Double])
-  ): String = {
+                            arrays: (Array[Double], Array[Double], Array[Double])
+                          ): String = {
     s"Weights: ${arrays._1.mkString(", ")}\n" +
       s"Means:  ${arrays._2.mkString(", ")}\n" +
       s"Variances ${arrays._3.mkString(", ")}"
@@ -29,6 +28,30 @@ object Main {
     f"$hours%02dh $minutes%02dm $seconds%02ds $ms%03dms $ns%09dns"
   }
 
+  private def iterate(initRdd: RDD[Double], k: Int, e: Double, writer: PrintWriter): Unit = {
+    var time: Long = 0
+    var weights: Array[Double] = Array.fill(k)(0)
+    var means: Array[Double] = Array.fill(k)(0)
+    var variances: Array[Double] = Array.fill(k)(0)
+    for (_ <- 0 until 100) {
+      val startTime = System.nanoTime()
+      val r = EM(initRdd, k, e)
+      time = time + (System.nanoTime() - startTime)
+      weights = weights.zip(r._1).map(e => e._1 + e._2)
+      means = means.zip(r._2).map(e => e._1 + e._2)
+      variances = variances.zip(r._3).map(e => e._1 + e._2)
+    }
+    time = time / 100
+    weights = weights.map(_ / 100)
+    means = means.map(_ / 100)
+    variances = variances.map(_ / 100)
+    writer.println(formatNanos(time))
+    writer.println(weights.mkString(", "))
+    writer.println(means.mkString(", "))
+    writer.println(variances.mkString(", "))
+    writer.close()
+  }
+
   def main(args: Array[String]): Unit = {
     val conf: SparkConf = new SparkConf()
     conf.setAppName("Datasets Test")
@@ -36,7 +59,7 @@ object Main {
     val filename = "dataset.txt"
     //val filename = "/data/bigDataSecret/dataset-small.txt"
     val sc = new SparkContext(conf)
-    val epsilon = 0.001
+    val epsilon = 0.01
     val initRdd =
       sc.textFile(filename)
         .map(_.toDouble)
@@ -53,14 +76,22 @@ object Main {
     } finally {
       writer.close()
     }
+    val k3e01 = new PrintWriter(new File("k3e01.txt"))
+    val k5e01 = new PrintWriter(new File("k5e01.txt"))
+    val k3e001 = new PrintWriter(new File("k3e001.txt"))
+    val k5e001 = new PrintWriter(new File("k5e001.txt"))
+    iterate(initRdd, 3, 0.01, k3e01)
+    iterate(initRdd, 5, 0.01, k5e01)
+    iterate(initRdd, 3, 0.001, k3e001)
+    iterate(initRdd, 5, 0.001, k5e001)
   }
 
   private def logLikelihood(
-      X: RDD[Double],
-      weights: Array[Double],
-      means: Array[Double],
-      variance: Array[Double]
-  ): Double = {
+                             X: RDD[Double],
+                             weights: Array[Double],
+                             means: Array[Double],
+                             variance: Array[Double]
+                           ): Double = {
     val K = weights.length
     X.map(x => {
       Math.log(
@@ -76,11 +107,11 @@ object Main {
   }
 
   private def gamma(
-      X: RDD[Double],
-      weights: Array[Double],
-      means: Array[Double],
-      variances: Array[Double]
-  ): RDD[Array[Double]] = X.map(x => {
+                     X: RDD[Double],
+                     weights: Array[Double],
+                     means: Array[Double],
+                     variances: Array[Double]
+                   ): RDD[Array[Double]] = X.map(x => {
     val K = weights.length
     val nominators = (0 until K).map(k =>
       weights(k) * Math.exp(
