@@ -51,7 +51,40 @@ When setting up the experiment, I had to choose a K for the amount of gaussians 
 When doing the experiments, I repeated the experiments a hundred times and took the average elapsed time as well as the average of the results.
 Switching these values up yielded the following:
 \par
+Setup: $K = 1$, $\epsilon = 0,01$\\
+Elapsed time: 00h 00m 00s 328ms 000663820ns\\
+\begin{table}[H]
+	\begin{tabularx}{\textwidth}{
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X|
+		}
+		\hline
+		Weights:   & 1      \\
+		\hline
+		Means:     & 171.34 \\
+		\hline
+		Variances: & 94.35  \\
+		\hline
+	\end{tabularx}
+\end{table}
+Setup: $K = 1$, $\epsilon = 0,001$\\
+Elapsed time: 00h 00m 00s 316ms 000859734ns\\
+\begin{table}[H]
+	\begin{tabularx}{\textwidth}{
+		|>{\raggedright\arraybackslash}X
+		|>{\raggedright\arraybackslash}X|
+		}
+		\hline
+		Weights:   & 1      \\
+		\hline
+		Means:     & 171.34 \\
+		\hline
+		Variances: & 94.35  \\
+		\hline
+	\end{tabularx}
+\end{table}
 Setup: $K = 3$, $\epsilon = 0,01$\\
+% TODO: Correct this
 Elapsed time: 00h 00m 34s 958ms 000849800ns\\
 \begin{table}[H]
 	\begin{tabularx}{\textwidth}{
@@ -69,8 +102,22 @@ Elapsed time: 00h 00m 34s 958ms 000849800ns\\
 		\hline
 	\end{tabularx}
 \end{table}
+Setup: $K = 3$, $\epsilon = 0,001$
+Elapsed time: 00h 02m 05s 487ms 000494461ns
+\begin{table}
+	\begin{tabularx}{\textwidth}{|X|X|X|X|}
+		\hline
+		Weights:   & 0.33   & 0.33   & 0.34   \\
+		\hline
+		Means:     & 172.92 & 172.31 & 171.25 \\
+		\hline
+		Variances: & 50.25  & 52.45  & 48.34  \\
+		\hline
+	\end{tabularx}
+\end{table}
+
 Setup: $K = 5$, $\epsilon = 0,01$\\
-Elapsed time: 00h 01m 09s 774ms 000631000ns
+Elapsed time: 00h 00m 51s 443ms 000337634ns
 \begin{table}[H]
 	\begin{tabularx}{\textwidth}{
 		|>{\raggedright\arraybackslash}X
@@ -80,20 +127,12 @@ Elapsed time: 00h 01m 09s 774ms 000631000ns
 		|>{\raggedright\arraybackslash}X
 		|>{\raggedright\arraybackslash}X|
 		}
-		\hline[H]
-		Weights:  & 0.15   & 0.24   & 0.36   & 0.08   & 0.14   \\
 		\hline
-		Means:    & 164.74 & 170.48 & 179.69 & 162.65 & 164.36 \\
+		Weights:   & 0.20   & 0.20   & 0.20   & 0.21   & 0.19   \\
 		\hline
-		Variances & 33.45  & 61.88  & 54.48  & 33.96  & 33.39  \\
+		Means:     & 170.36 & 171.29 & 171.24 & 171.82 & 172.85 \\
 		\hline
-	\end{tabularx}
-\end{table}
-Setup: $K = 3$, $\epsilon = 0,001$
-%placeholder
-\begin{table}
-	\begin{tabularx}{\textwidth}{|X|X|X|X|}
-		\hline
+		Variances: & 50.59  & 50.62  & 49.12  & 47.38  & 52.67  \\
 		\hline
 	\end{tabularx}
 \end{table}

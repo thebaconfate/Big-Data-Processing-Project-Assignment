@@ -46,9 +46,9 @@ object Main {
     means = means.map(_ / 100)
     variances = variances.map(_ / 100)
     writer.println(formatNanos(time))
-    writer.println(weights.mkString(", "))
-    writer.println(means.mkString(", "))
-    writer.println(variances.mkString(", "))
+    writer.println(weights.mkString(" & "))
+    writer.println(means.mkString(" & "))
+    writer.println(variances.mkString(" & "))
     writer.close()
   }
 
@@ -76,13 +76,17 @@ object Main {
     } finally {
       writer.close()
     }
+    //val k1e01 = new PrintWriter(new File("k1e01.txt"))
     val k3e01 = new PrintWriter(new File("k3e01.txt"))
-    val k5e01 = new PrintWriter(new File("k5e01.txt"))
-    val k3e001 = new PrintWriter(new File("k3e001.txt"))
+    //val k5e01 = new PrintWriter(new File("k5e01.txt"))
+    //val k1e001 = new PrintWriter(new File("K1e001.txt"))
+    //val k3e001 = new PrintWriter(new File("k3e001.txt"))
     val k5e001 = new PrintWriter(new File("k5e001.txt"))
+    //iterate(initRdd, 1, 0.01, k1e01)
     iterate(initRdd, 3, 0.01, k3e01)
-    iterate(initRdd, 5, 0.01, k5e01)
-    iterate(initRdd, 3, 0.001, k3e001)
+    //iterate(initRdd, 5, 0.01, k5e01)
+    //iterate(initRdd, 1, 0.001, k1e001)
+    //iterate(initRdd, 3, 0.001, k3e001)
     iterate(initRdd, 5, 0.001, k5e001)
   }
 

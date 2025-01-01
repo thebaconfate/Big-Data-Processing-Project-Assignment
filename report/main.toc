@@ -4,5 +4,5 @@
 \contentsline {subsection}{\numberline {2.1}Local machine}{2}{subsection.2.1}%
 \contentsline {section}{\numberline {3}Questions}{3}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Have you persisted some of your intermediate results? Can you think of why persisting your data in memory may be helpful for this algorithm?}{3}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2} In which parts of your implementation have you used partitioning? Did it help for performance? If so, why? }{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.2} In which parts of your implementation have you used partitioning? Did it help for performance? If so, why? }{4}{subsection.3.2}%
 \contentsline {subsection}{\numberline {3.3} Did you use RDDs, DataFrames or Datasets for your implementation? Why? }{4}{subsection.3.3}%
