@@ -319,6 +319,13 @@ INPUT C:\Users\gerar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx10.tf
 OUTPUT main.toc
 INPUT C:\Users\gerar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
 INPUT C:\Users\gerar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
+INPUT .\images\sparkscreenshot.png
+INPUT .\images\sparkscreenshot.png
+INPUT .\images\sparkscreenshot.png
+INPUT .\images\sparkscreenshot.png
+INPUT .\images\sparkscreenshot.png
+INPUT .\images\sparkscreenshot.png
+INPUT .\images\sparkscreenshot.png
 INPUT main.aux
 INPUT .\main.out
 INPUT .\main.out

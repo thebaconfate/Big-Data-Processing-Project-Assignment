@@ -51,7 +51,7 @@ When setting up the experiment, I had to choose a K for the amount of gaussians 
 When doing the experiments, I repeated the experiments a hundred times and took the average elapsed time as well as the average of the results.
 Switching these values up yielded the following:
 \par
-Setup: $K = 1$, $\epsilon = 0,01$\\
+Setup: $K = 1$, $\epsilon = 0,01$.
 Elapsed time: 00h 00m 00s 328ms 000663820ns\\
 \begin{table}[H]
 	\begin{tabularx}{\textwidth}{
@@ -67,7 +67,7 @@ Elapsed time: 00h 00m 00s 328ms 000663820ns\\
 		\hline
 	\end{tabularx}
 \end{table}
-Setup: $K = 1$, $\epsilon = 0,001$\\
+Setup: $K = 1$, $\epsilon = 0,001$.
 Elapsed time: 00h 00m 00s 316ms 000859734ns\\
 \begin{table}[H]
 	\begin{tabularx}{\textwidth}{
@@ -83,9 +83,8 @@ Elapsed time: 00h 00m 00s 316ms 000859734ns\\
 		\hline
 	\end{tabularx}
 \end{table}
-Setup: $K = 3$, $\epsilon = 0,01$\\
-% TODO: Correct this
-Elapsed time: 00h 00m 34s 958ms 000849800ns\\
+Setup: $K = 3$, $\epsilon = 0,01$.
+Elapsed time: 00h 00m 35s 944ms 000450200ns\\
 \begin{table}[H]
 	\begin{tabularx}{\textwidth}{
 		|>{\raggedright\arraybackslash}X
@@ -94,17 +93,17 @@ Elapsed time: 00h 00m 34s 958ms 000849800ns\\
 		|>{\raggedright\arraybackslash}X|
 		}
 		\hline
-		Weights:   & 0.30   & 0.31   & 0.37   \\
+		Weights:   & 0.32   & 0.33   & 0.34   \\
 		\hline
-		Means:     & 168.58 & 163.85 & 179.82 \\
+		Means:     & 172.01 & 171.45 & 171.81 \\
 		\hline
-		Variances: & 54.03  & 32.95  & 52.86  \\
+		Variances: & 49.67  & 48.30  & 50.39  \\
 		\hline
 	\end{tabularx}
 \end{table}
-Setup: $K = 3$, $\epsilon = 0,001$
+Setup: $K = 3$, $\epsilon = 0,001$.
 Elapsed time: 00h 02m 05s 487ms 000494461ns
-\begin{table}
+\begin{table}[H]
 	\begin{tabularx}{\textwidth}{|X|X|X|X|}
 		\hline
 		Weights:   & 0.33   & 0.33   & 0.34   \\
@@ -115,8 +114,7 @@ Elapsed time: 00h 02m 05s 487ms 000494461ns
 		\hline
 	\end{tabularx}
 \end{table}
-
-Setup: $K = 5$, $\epsilon = 0,01$\\
+Setup: $K = 5$, $\epsilon = 0,01$.
 Elapsed time: 00h 00m 51s 443ms 000337634ns
 \begin{table}[H]
 	\begin{tabularx}{\textwidth}{
@@ -136,10 +134,11 @@ Elapsed time: 00h 00m 51s 443ms 000337634ns
 		\hline
 	\end{tabularx}
 \end{table}
-Setup: $K = 5$, $\epsilon = 0,01$
-%placeholder
-\begin{table}
-	\begin{tabularx}{\textwidth}{
+Setup: $K = 5$, $\epsilon = 0,001$.
+00h 03m 39s 428ms 000105120ns\\
+\begin{table}[H]
+	\begin{tabularx}
+		{\textwidth}{
 		|>{\raggedright\arraybackslash}X
 		|>{\raggedright\arraybackslash}X
 		|>{\raggedright\arraybackslash}X
@@ -148,16 +147,26 @@ Setup: $K = 5$, $\epsilon = 0,01$
 		|>{\raggedright\arraybackslash}X|
 		}
 		\hline
+		Weights:   & 0.21   & 0.19   & 0.19   & 0.20   & 0.21   \\
+		\hline
+		Means:     & 171.41 & 171.95 & 171.42 & 173.45 & 171.36 \\
+		\hline
+		Variances: & 46.23  & 48.03  & 48.40  & 50.46  & 49.15  \\
 		\hline
 	\end{tabularx}
 \end{table}
-In all cases, it meant that when the Epsilon is smaller, more iterations are required to find results.
-When the chosen K is higher, this also means that the array of results is higher, which means more computations must be done to update the weights, variances and means. Both of which increase the elapsed time.
+In nearly all cases, it meant that when the Epsilon is smaller, more iterations are required to find results.
+When the chosen K is higher, this also means that the array of results is higher, which means more computations must be done to update the weights, variances and means. Both of which increase the elapsed time, however a smaller $\epsilon$ seems to impact the elapsed time more than the size of K.
 \par
 After testing different starting values, I also tested my implementation by removing or adding persists on RDD's. I found that removing persists on the intermediate results described in \ref{sec:design-decisions} leads to a lot longer execution times, especially when having a smaller Epsilon or higher K.
 \par
 I must admit, I tried this experiment only a few times because it just took too long and it was already mentioned in class that not persisting intermediate results was very inefficient.
 \par
+\subsection{Isabelle}
+While I tried to benchmark on the small dataset, it did not yield results, as I ran out of time prior to getting results. Underneath a screenshot of the Spark UI:
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{images/sparkscreenshot.png}
+\end{figure}
 \section{Questions}
 \subsection{Have you persisted some of your intermediate results? Can you think of why persisting
 	your data in memory may be helpful for this algorithm?}
