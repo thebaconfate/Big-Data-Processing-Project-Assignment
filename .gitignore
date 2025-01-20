@@ -15,3 +15,9 @@ hs_err_pid*
 /.metals
 .scalafmt.conf
 *.fls
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.toc
+*.log
